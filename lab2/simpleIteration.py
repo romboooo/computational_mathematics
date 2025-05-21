@@ -1,48 +1,65 @@
 import math
-import sys
+import numpy as np
 
-def cube_root(x):
-    return math.copysign(abs(x) ** (1/3), x)
 
 def func(x, choice):
     if choice == 1:
-        return 2.74 * x ** 3 - 1.93 * x ** 2 - 15.28 * x - 3.72
+        return 2.74 * x**3 - 1.93 * x**2 - 15.28 * x - 3.72
     if choice == 2:
         return x**3 - x + 4
     if choice == 3:
         return math.sin(x) - math.exp(-x)
 
-def fi(x, choice):
-    if choice == 1:
-        return (2.74 * x**3 - 1.93 * x**2 - 3.72) / 15.28
-    if choice == 2:
-        return cube_root(x - 4)
-    if choice == 3:
-        return math.asin(math.exp(-x))
 
-def diffFi(x, choice):
+def df(x, choice):
     if choice == 1:
-        return (8.22 * x**2 - 3.86 * x) / 15.28
-    if choice == 2:
-        return (1/3) * (x - 4) ** (-2/3)
-    if choice == 3:
-        return -math.exp(-x) / math.sqrt(1 - math.exp(-2*x))
+        return 2.74 * 3 * x**2 - 1.93 * 2 * x - 15.28
+    elif choice == 2:
+        return 3 * x**2 - 1
+    elif choice == 3:
+        return math.cos(x) + math.exp(-x)
+
+
+def getLambda(a,b,choice):
+    if max(df(a,choice), df(b,choice)) < 0:
+        print(f"lamda = {-1 / max(df(a,choice), df(b,choice))}")
+        return -1 / max(df(a,choice), df(b,choice))
+    else: 
+        print(f"lamda = {1 / max(df(a,choice), df(b,choice))}")
+        return 1 / max(df(a,choice), df(b,choice))
+
 
 def convergenceCondition(a, b, choice):
-    max_deriv = max(abs(diffFi(a, choice)), abs(diffFi(b, choice)))
-    if max_deriv >= 1:
-        print("Итерационная последовательность может не сходиться.")
-    elif math.isclose(max_deriv, 1, abs_tol=0.1):
-        print("Скорость сходимости низкая.")
-    else:
-        print("Условие сходимости выполняется.")
+    x = (a + b) / 2
+    lam = getLambda(a,b,choice)
+
+    diffFi = lambda x: 1 + lam * df(x,choice)
+
+    try:
+        if abs(diffFi(x, choice)) >= 1:
+            print("Условие сходимости не выполняется.")
+            return False
+        else:
+            print("Условие сходимости выполняется.")
+            return True
+    except:
+        print("Невозможно проверить условие сходимости.")
+        return False
+
 
 def count(a, b, epsilon, choice):
     xi = (a + b) / 2
     i = 1
-    while True:
-        print(f"итерация номер {i}")
+    lam = getLambda(a,b,choice)
+    
+    fi = lambda x, choice: x + lam*func(x,choice)
+    diffFi = lambda x,choice: 1 + lam * df(x,choice)
 
+    print(f"значения 𝝋'(a) = {diffFi(a,choice)}, 𝝋'(b) = {diffFi(b,choice)} ")
+    print("\n|--Итерация--|-----xi-----|----xi+1-----|---𝝋(xi+1)-----|----f(xi+1)----|--|xi+1 - xi|--|")
+    print("|------------|------------|-------------|---------------|--------------|---------------|")
+
+    while True:
         try:
             xi1 = fi(xi, choice)
         except ValueError as e:
@@ -52,18 +69,20 @@ def count(a, b, epsilon, choice):
         try:
             fixi1 = fi(xi1, choice)
         except ValueError:
-            fixi1 = float('nan')
-            
+            fixi1 = float("nan")
+
         mod = abs(xi1 - xi)
-        print("|--xi--|--x+i--|--𝝋(xi+1)--|--f(x(i+1))--|--|Xi+1 - Xi|--|")
-        print(f"{xi:7.5f} {xi1:7.5f} {fixi1:7.5f} {fxi1:7.5f} {mod:7.5f}")
-        if abs(xi1 - xi) < epsilon or abs(fxi1) < epsilon:
+        print(f"| {i:8d}   | {xi:10.5f} |  {xi1:12.5f} | {fixi1:12.5f} | {fxi1:12.5f} | {abs(xi1 - xi):12.5f}  | ")
+
+        if abs(fxi1) < epsilon and abs(xi1 - xi) < epsilon:
+            print(f"Найден корень: xi = {xi1:.6f}, f(xi) = {func(xi1, choice):.15f}, итераций: {i}")
             break
         i += 1
-        if i > 15:
+        if i > 50:
             print("Превышен предел итераций.")
             break
         xi = xi1
+
 
 def get_choice():
     while True:
@@ -87,20 +106,50 @@ def get_interval(choice):
             a, b = map(float, input().split())
             if a > b:
                 a, b = b, a
-            if choice == 3 and (a < 0 or b < 0):
-                print("Для уравнения 3 интервал должен быть неотрицательным.")
+            if choice == 3:
+                if a <= 0 or b > math.pi:
+                    print("Для уравнения 3 интервал должен быть в (0, π].")
+                    continue
+
+            changes = count_roots(a, b, choice)
+            if changes == -1:
+                print("Ошибка при вычислении знаков функции на интервале.")
                 continue
+            if changes == 0:
+                print("На данном интервале нет корней. Попробуйте другой интервал.")
+                continue
+            if changes >= 2:
+                print(
+                    f"Интервал может содержать несколько корней ({changes} изменений знака). Выберите меньший интервал."
+                )
+                continue
+
             return a, b
         except ValueError:
             print("Ошибка ввода. Введите два числа через пробел.")
-def isRootExists(a,b,choice)->bool:
-    return func(a,choice)*func(b,choice) < 0
+
+def count_roots(a, b, choice, steps=10000):
+    xs = np.linspace(a, b, steps)
+    values = []
+    for x in xs:
+        try:
+            values.append(func(x,choice))
+        except Exception:
+            values.append(np.nan)
+    sign_changes = 0
+    for i in range(1, len(values)):
+        if np.isnan(values[i - 1]) or np.isnan(values[i]):
+            continue
+        if values[i - 1] * values[i] < 0:
+            sign_changes += 1
+    return sign_changes
 
 choice = get_choice()
 a, b = get_interval(choice)
-if(not isRootExists(a,b,choice)):
-    print("корней нет")
-    sys.exit(0)
 epsilon = float(input("Введите точность: "))
-convergenceCondition(a, b, choice)
-count(a, b, epsilon, choice)
+
+if convergenceCondition(a, b, choice):
+    count(a, b, epsilon, choice)
+else:
+    print("Метод простых итераций может не сойтись.")
+    count(a, b, epsilon, choice)

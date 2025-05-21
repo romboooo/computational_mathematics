@@ -1,22 +1,23 @@
 import math
-import sys
-import os
+import numpy as np
 
-def func(x,choice):
+def func(x, choice):
     if choice == 1:
         return 2.74 * x ** 3 - 1.93 * x ** 2 - 15.28 * x - 3.72
     if choice == 2:
         return x**3 - x + 4
     if choice == 3:
         return math.sin(x) - math.exp(-x)
-def diffFunc(x,choice):
+
+def diffFunc(x, choice):
     if choice == 1:
         return 8.22 * x**2 - 3.86 * x - 15.28  
     if choice == 2:
         return 3*x**2 - 1
     if choice == 3:
         return math.cos(x) + math.exp(-x)
-def doubleDiffFunc(x,choice):
+
+def doubleDiffFunc(x, choice):
     if choice == 1:
         return 16.44 * x - 3.86 
     if choice == 2:
@@ -24,106 +25,157 @@ def doubleDiffFunc(x,choice):
     if choice == 3:
         return -math.sin(x) - math.exp(-x)
 
-def is_sign_consistent(func, a, b, num_points=1000):
-    if a > b:
-        a, b = b, a
-    if a == b:
-        val = func(a)
-        return val != 0
+def convergenceCondition(a, b, choice):
+    return countRootsForDiff(a,b,choice) == 0 == countRootsForDoubleDiff(a,b,choice)
+
+
+def xiCount(x, choice):
+    return x - (func(x, choice)/diffFunc(x, choice))
+
+def x0Count(a, b, choice): 
+    x0 = (a + b) / 2
+    fa = func(a, choice)
+    dda = doubleDiffFunc(a, choice)
+    fb = func(b, choice)
+    ddb = doubleDiffFunc(b, choice)
     
-    step = (b - a) / (num_points - 1)
-    prev_val = func(a,choice)
-    if prev_val == 0:
-        return False
-    prev_sign = 1 if prev_val > 0 else -1
-    
-    for i in range(1, num_points):
-        x = a + i * step
-        current_val = func(x,choice)
-        if current_val == 0:
-            return False
-        current_sign = 1 if current_val > 0 else -1
-        if current_sign != prev_sign:
-            return False
-        prev_sign = current_sign
-    return True
-
-def convergenceCondition(a, b):
-    if not is_sign_consistent(diffFunc, a, b):
-        return False
-    if not is_sign_consistent(doubleDiffFunc, a, b):
-        return False
-    return True
-
-def xiCount(x,choice):
-    return x - (func(x,choice)/diffFunc(x,choice))
-
-def x0Count(a,b,choice): 
-    x0 = (a+b)/2
-    if(func(a,choice)*doubleDiffFunc(a,choice) > 0):
+    if fa * dda > 0:
         x0 = a
-    elif(func(b,choice)*doubleDiffFunc(b,choice) > 0):
+    elif fb * ddb > 0:
         x0 = b
-
-    if(func(x0, choice) * doubleDiffFunc(x0,choice) > 0):
+    
+    if func(x0, choice) * doubleDiffFunc(x0, choice) > 0:
         print("𝑓(𝑥0)∙ 𝑓′′(𝑥0) > 0 выполняется => метод обеспечивает быструю сходимость")
     else:
         print("𝑓(𝑥0)∙ 𝑓′′(𝑥0) > 0 не выполняется => метод не обеспечивает быструю сходимость")
-
     return x0
 
-def newtonMethod(a,b,epsilon,choice):
+def newtonMethod(a, b, epsilon, choice):
     i = 1
-    x0 = x0Count(a, b,choice)  
+    x0 = x0Count(a, b, choice)  
     xi = x0
-    while(True):
-        print(f"итерация номер {i}")
-        fxi = func(xi,choice)
-        fdiffxi = diffFunc(xi,choice)
-        xi1 = xiCount(xi,choice)
 
-        print("|--xi--|--f(xi)--|--f'(xi)--|--x(i+1)--|--|Xi+1 - Xi|--|")
-        print(f"{xi:7f} {fxi:7f} {fdiffxi:7f} {xi1:7f} {abs(xi1 - xi):7f}")
-        if(abs(xi1 - xi) < epsilon) or (abs(fxi) < epsilon):
+    print("\n|--Итерация--|-----xi-----|----f(xi)-----|---f'(xi)-----|----x(i+1)----|--|xi+1 - xi|--|")
+    print("|------------|------------|--------------|--------------|--------------|---------------|")
+    while True:
+        fxi = func(xi, choice)
+        fdiffxi = diffFunc(xi, choice)
+        xi1 = xiCount(xi, choice)
+
+        print(f"| {i:8d}   | {xi:10.5f} | {fxi:12.5f} | {fdiffxi:12.5f} | {xi1:12.5f} | {abs(xi1 - xi):12.5f}  | ")
+
+        if abs(fxi) < epsilon and abs(xi1 - xi) < epsilon:
+            print(f"Найден корень: xi = {xi1:.6f}, f(xi) = {func(xi1, choice):.15f}, итераций: {i}")
             break
-        i+=1
+        i += 1
+        if i > 100:
+            print("Достигнут максимальный лимит итераций")
+            break
+
         xi = xi1
-        if(i > 10):
-            print("превышен лимит итераций")
-            break
+        
 
-def isRootExists(a,b,choice):
-    return func(a,choice)*func(b,choice) < 0
+def countRoots(a, b, choice, steps=1_000):
+    xs = np.linspace(a, b, steps)
+    values = []
+    for x in xs:
+        try:
+            values.append(func(x,choice))
+        except Exception:
+            values.append(np.nan)
+    sign_changes = 0
+    for i in range(1, len(values)):
+        if np.isnan(values[i - 1]) or np.isnan(values[i]):
+            continue
+        if values[i - 1] * values[i] < 0:
+            sign_changes += 1
+    return sign_changes
 
-def choice():
-    print(f"выберите уравнениe:")
-    print("1:")
-    print("2.74x^3 - 1.93x^2 - 15.28x - 3.72 = 0")
-    print("2:")
-    print("x^3 - x + 4 = 0")
-    print("3:")
-    print("sin(x) - exp^-x = 0")
-    choice = int(input())
-    if(choice in [1, 2, 3]):
-        return choice
+def countRootsForDiff(a, b, choice, steps=1_000):
+    xs = np.linspace(a, b, steps)
+    values = []
+    for x in xs:
+        try:
+            values.append(diffFunc(x,choice))
+        except Exception:
+            values.append(np.nan)
+    sign_changes = 0
+    for i in range(1, len(values)):
+        if np.isnan(values[i - 1]) or np.isnan(values[i]):
+            continue
+        if values[i - 1] * values[i] < 0:
+            sign_changes += 1
+    return sign_changes
+
+def countRootsForDoubleDiff(a, b, choice, steps=1_000):
+    xs = np.linspace(a, b, steps)
+    values = []
+    for x in xs:
+        try:
+            values.append(doubleDiffFunc(x,choice))
+        except Exception:
+            values.append(np.nan)
+    sign_changes = 0
+    for i in range(1, len(values)):
+        if np.isnan(values[i - 1]) or np.isnan(values[i]):
+            continue
+        if values[i - 1] * values[i] < 0:
+            sign_changes += 1
+    return sign_changes
+
+
+def get_interval(choice):
+    while True:
+        print("Введите интервал изоляции корня (два числа через пробел a b): ")
+        try:
+            a, b = map(float, input().split())
+            if a > b:
+                a, b = b, a
+            if choice == 3 and (a < 0 or b < 0):
+                print("Для уравнения 3 интервал должен быть неотрицательным.")
+                continue
+
+            changes = countRoots(a, b, choice)
+            if changes == -1:
+                print("Ошибка при вычислении знаков функции на интервале.")
+                continue
+            if changes == 0:
+                print("На данном интервале нет корней. Попробуйте другой интервал.")
+                continue
+            if changes >= 2:
+                print(
+                    f"Интервал может содержать несколько корней ({changes} изменений знака). Выберите меньший интервал."
+                )
+                continue
+
+            return a, b
+        except ValueError:
+            print("Ошибка ввода. Введите два числа через пробел.")
+
+def get_choice():
+    while True:
+        print("Выберите уравнение:")
+        print("1: 2.74x^3 - 1.93x^2 - 15.28x - 3.72 = 0")
+        print("2: x^3 - x + 4 = 0")
+        print("3: sin(x) - exp(-x) = 0")
+        try:
+            choice = int(input())
+            if choice in (1, 2, 3):
+                return choice
+            else:
+                print("Нет такого варианта. Введите 1, 2 или 3.")
+        except ValueError:
+            print("Введите целое число.")
+
+def main():
+    choice = get_choice()
+    a, b = get_interval(choice)
+    epsilon = float(input("Введите точность ε: "))
+    if convergenceCondition(a, b, choice):
+        print("Условия сходимости выполняются, метод Ньютона применим.")
     else:
-        print("такого варианта нет :(")
-        choice()
+        print("Условия сходимости не выполняются, метод Ньютона может не сойтись.")
 
-choice = choice()
-
-print("введите интервал изоляции корня. Два числа через пробел a0 b0 ")
-a, b = map(int, input().split())
-if not isRootExists(a, b,choice):
-    print(f"на отрезке [{a},{b}] нет корней либо больше одного (попробуйте сузить интервал)")
-    # os.system("sudo shutdown -h now")
-    sys.exit(0)
-epsilon = float(input("введите точность \n"))
-
-if convergenceCondition(a,b):
-    print("условие сходимости выполняется, метод ньютона эффективен")
-else:
-    print("условие сходимости не выполняется, метод ньютона неэффективен")
-
-newtonMethod(a,b,epsilon,choice)
-
+    newtonMethod(a, b, epsilon, choice)
+if __name__ == "__main__":
+    main()
