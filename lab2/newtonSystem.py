@@ -9,7 +9,7 @@ def func1(x, y, choice):
     if choice == 1:
         return np.sin(x + 1) - y - 1.2
     elif choice == 2:
-        return np.sin(x - 1) + y - 1.5  # f1
+        return np.sin(x - 1) + y - 1.5  
     elif choice == 3:
         return 2*x - np.sin(y-0.5) -1
 
@@ -26,7 +26,7 @@ def diffFunc1ForX(x, y, choice):
     if choice == 1:
         return np.cos(x + 1)
     elif choice == 2:
-        return np.cos(x - 1)  # df1/dx
+        return np.cos(x - 1)  
     elif choice == 3:
         return 2
         
@@ -125,12 +125,9 @@ def choice():
         print("такого варианта нет")
         choice()
 
-    
-
 choice = choice()
 
 print("Введите начальное приближение (два числа через пробел):")
-# plot_system(choice)
 
 a, b = map(float, input().split()) 
 epsilon = float(input("Введите точность: "))
@@ -140,32 +137,3 @@ solution_x, solution_y = newton_system(a, b, epsilon,choice)
 print("\nРезультат:")
 print(f"x ≈ {solution_x:.6f}")
 print(f"y ≈ {solution_y:.6f}")
-
-
-
-# def plot_system(choice):
-#     plt.figure(figsize=(8, 6))
-    
-#     x = np.linspace(-2, 2, 400)
-#     y = np.linspace(-2, 2, 400)
-#     X, Y = np.meshgrid(x, y)
-    
-#     F1 = func1(X, Y, choice)
-#     F2 = func2(X, Y, choice)
-    
-#     titles = {
-#         1: "Система 1: sin(x+1)-y=1.2 и 2x+cos(y)=2",
-#         2: "Система 2: sin(x-1)+y=1.5 и x-sin(y+1)=1",
-#         3: "Система 3: 2x-sin(y-0.5)=1 и y+cos(x)=1.5"
-#     }
-#     title = titles.get(choice, "Неизвестная система")
-    
-#     plt.contour(X, Y, F1, levels=[0], colors='blue', linewidths=2, label='Уравнение 1')
-#     plt.contour(X, Y, F2, levels=[0], colors='red', linewidths=2, label='Уравнение 2')
-    
-#     plt.title(title)
-#     plt.xlabel('x')
-#     plt.ylabel('y')
-#     plt.grid(True)
-#     plt.legend()
-#     plt.show()

@@ -1,0 +1,5 @@
+*/__pycache__
+.gitmodules
+package-lock.json
+.DS_Store
+comp_math_lab_3
