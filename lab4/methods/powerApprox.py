@@ -1,5 +1,7 @@
 import numpy as np
 
+from helpers.interpretationR import interpretR
+
 def powerApprox(x: list[float], y: list[float]) -> dict[str, float]:
     print("")
     print("--- Степенная ---")
@@ -9,19 +11,19 @@ def powerApprox(x: list[float], y: list[float]) -> dict[str, float]:
     if any(val <= 0 for val in x) or any(val <= 0 for val in y):
         raise ValueError("Все значения x и y должны быть положительными.")
 
-    ln_x = np.log(x)
-    ln_y = np.log(y)
+    lnx = np.log(x)
+    lny = np.log(y)
 
-    sum_ln_x = ln_x.sum()
-    sum_ln_y = ln_y.sum()
-    sum_ln_x2 = (ln_x ** 2).sum()
-    sum_ln_x_ln_y = (ln_x * ln_y).sum()
+    sumlnx = lnx.sum()
+    sumlny = lny.sum()
+    sumlnx2 = (lnx ** 2).sum()
+    sumlnxlny = (lnx * lny).sum()
 
     A = np.array([
-        [sum_ln_x2, sum_ln_x],
-        [sum_ln_x, n]
+        [sumlnx2, sumlnx],
+        [sumlnx, n]
     ])
-    B = np.array([sum_ln_x_ln_y, sum_ln_y])
+    B = np.array([sumlnxlny, sumlny])
 
     try:
         solution = np.linalg.solve(A, B)
@@ -49,14 +51,7 @@ def powerApprox(x: list[float], y: list[float]) -> dict[str, float]:
     print(f"Среднеквадратичное отклонение: δ = {delta:.6f}")
     print(f"Достоверность аппроксимации: R² = {R2:.6f}")
     
-    if R2 >= 0.95:
-        print("R2 >= 0.95 -> Высокая точность аппроксимации, модель хорошо описывает явление")
-    elif 0.75 <= R2 < 0.95:
-        print("0.75 <= R2 < 0.95 -> Удовлетворительная аппроксимация, модель в целом адекватно описывает явление")
-    elif 0.5 <= R2 < 0.75:
-        print("0.5 <= R2 < 0.75 -> Слабая аппроксимация, модель слабо описывает явление")
-    elif 0.5 > R2:
-        print("0.5 > R2 -> Точность аппроксимации недостаточна и модель требует изменения")
+    interpretR(R2)
 
     return {
         "a": a,
