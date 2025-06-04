@@ -11,7 +11,10 @@ def powerApprox(x: list[float], y: list[float]) -> dict[str, float]:
     n = len(x)
 
     if any(val <= 0 for val in x) or any(val <= 0 for val in y):
-        raise ValueError("Все значения x и y должны быть положительными.")
+        print("Метод неприменим. Все значения x и y должны быть положительными.")
+        return None
+
+
 
     lnx = np.log(x)
     lny = np.log(y)
@@ -61,5 +64,6 @@ def powerApprox(x: list[float], y: list[float]) -> dict[str, float]:
         "S": S,
         "delta": delta,
         "R2": R2,
-        "name": NAME
+        "name": NAME,
+        "model": polinomModel
     }

@@ -7,7 +7,9 @@ def logApprox(x, y) -> dict[str, float]:
     print("")
     print("--- Логарифмическая ---")
     if any(val <= 0 for val in x):
-        raise ValueError("Все значения x должны быть положительными.")
+        print("Метод неприменим. Все значения x и y должны быть положительными.")
+        return None
+    
     n = len(x)
     x_arr = np.array(x)
     y_arr = np.array(y)
@@ -51,5 +53,6 @@ def logApprox(x, y) -> dict[str, float]:
         "S": S,
         "delta": delta,
         "R2": R2,
-        "name": NAME
+        "name": NAME,
+        "model": polinomModel
     }

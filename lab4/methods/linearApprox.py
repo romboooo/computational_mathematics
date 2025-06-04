@@ -25,7 +25,7 @@ def linealApprox(x,y) -> dict[str,float]:
     else:
         print("ошибка в вычислении матрицы")
 
-    def polinomModel(a0, a1, x):
+    def polinomModel(x):
         return a0*x + a1
     
     fi = []
@@ -33,7 +33,7 @@ def linealApprox(x,y) -> dict[str,float]:
     S = 0
     fiAverage = 0
     for i in range(n):
-        fi.append(polinomModel(a0, a1, x[i]))
+        fi.append(polinomModel(x[i]))
         ei.append(fi[i] - y[i])
         S += ei[i] ** 2
         fiAverage += fi[i]
@@ -62,5 +62,6 @@ def linealApprox(x,y) -> dict[str,float]:
         "delta": delta,
         "R2": R2,
         "r": r,
-        "name": NAME
+        "name": NAME,
+        "model": polinomModel
     }

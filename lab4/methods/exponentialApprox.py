@@ -10,7 +10,8 @@ def exponentialApprox(x, y):
     print("--- Экспоненциальная ---")
 
     if any(val <= 0 for val in y):
-        raise ValueError("Все значения y должны быть положительными.")
+        print("Метод неприменим. Все значения x и y должны быть положительными.")
+        return None
 
     n = len(x)
     x_arr = np.array(x)
@@ -53,4 +54,5 @@ def exponentialApprox(x, y):
     print(f"Достоверность аппроксимации: R² = {R2:.6f}")
 
     interpretR(R2)
-    return {"a0": a0, "a1": a1, "S": S, "delta": delta, "R2": R2, "name": NAME}
+    
+    return {"a0": a0, "a1": a1, "S": S, "delta": delta, "R2": R2, "name": NAME, "model": polinomModel}
