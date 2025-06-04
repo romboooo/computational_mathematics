@@ -1,6 +1,7 @@
 import numpy as np
 
 from helpers.interpretationR import interpretR
+NAME = 1
 
 def cubeApprox(x,y) -> dict[str,float]:
     print("")
@@ -65,4 +66,5 @@ def cubeApprox(x,y) -> dict[str,float]:
         "S": S,
         "delta": delta,
         "R2": R2,
+        "name": NAME
     }

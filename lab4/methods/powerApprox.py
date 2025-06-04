@@ -2,6 +2,8 @@ import numpy as np
 
 from helpers.interpretationR import interpretR
 
+NAME = 5
+
 def powerApprox(x: list[float], y: list[float]) -> dict[str, float]:
     print("")
     print("--- Степенная ---")
@@ -59,4 +61,5 @@ def powerApprox(x: list[float], y: list[float]) -> dict[str, float]:
         "S": S,
         "delta": delta,
         "R2": R2,
+        "name": NAME
     }

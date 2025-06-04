@@ -2,7 +2,7 @@ import numpy as np
 
 from helpers.interpretationR import interpretR
 
-
+NAME = 4
 def logApprox(x, y) -> dict[str, float]:
     print("")
     print("--- Логарифмическая ---")
@@ -51,4 +51,5 @@ def logApprox(x, y) -> dict[str, float]:
         "S": S,
         "delta": delta,
         "R2": R2,
+        "name": NAME
     }

@@ -1,10 +1,11 @@
 import numpy as np
 
 from helpers.interpretationR import interpretR
-
+NAME = 2
 def exponentialApprox(x, y):
     print("")
     print("--- Экспоненциальная ---")
+
     if any(val <= 0 for val in y):
         raise ValueError("Все значения y должны быть положительными.")
     
@@ -32,7 +33,7 @@ def exponentialApprox(x, y):
         return {}
     
     def polinomModel(x):
-        return np.exp(a0) * np.exp(a1 * x)  # Исправлено: используем exp(a0)
+        return np.exp(a0) * np.exp(a1 * x) 
     
     fi = polinomModel(np.array(x))
     ei = y - fi
@@ -55,4 +56,5 @@ def exponentialApprox(x, y):
         "S": S,
         "delta": delta,
         "R2": R2,
+        "name": NAME 
     }

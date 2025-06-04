@@ -2,6 +2,8 @@ import numpy as np
 
 from helpers.interpretationR import interpretR
 
+NAME = 6
+
 def squareApprox(x, y) -> dict[str,float]:
     print("")
     print("--- Квадратичная ---")
@@ -57,5 +59,6 @@ def squareApprox(x, y) -> dict[str,float]:
         "a2": a2,
         "S": S,
         "delta": delta,
-        "R2": R2
+        "R2": R2,
+        "name": NAME
     }

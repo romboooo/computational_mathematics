@@ -3,6 +3,8 @@ import numpy as np
 from helpers.interpretationR import interpretR
 from helpers.interpretationCorrel import interCorrel
 
+NAME = 3
+
 def linealApprox(x,y) -> dict[str,float]:
     print("")
     print("--- Линейная ---")
@@ -59,5 +61,6 @@ def linealApprox(x,y) -> dict[str,float]:
         "S": S,
         "delta": delta,
         "R2": R2,
-        "r": r
+        "r": r,
+        "name": NAME
     }
