@@ -62,7 +62,6 @@ def drawFunctions(x, y, results: List[Dict]):
     plt.tight_layout()
     
     plt.savefig('approximations_comparison.png', dpi=300)
-    # plt.show()
 
 def countResult(arr):
     print("")
