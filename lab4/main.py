@@ -76,8 +76,12 @@ def countResult(arr):
     
     print(f"Минимальное СКО: {minDelta}")
     print("Лучшие модели:")
-    for model in bestModels:
-        print(f"- {names.get(model.get('name'))} (СКО: {model.get('delta')})")
+    if len(bestModels) != 0:
+        for model in bestModels:
+            print(f"- {names.get(model.get('name'))} (СКО: {model.get('delta')})")
+    else:
+        print("Решения не найдено")
+
 
     
 def main():

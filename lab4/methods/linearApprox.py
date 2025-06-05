@@ -39,7 +39,9 @@ def linealApprox(x,y) -> dict[str,float]:
         fiAverage += fi[i]
     delta = np.sqrt(S / n)
     fiAverage = 1 / n * sum(fi)
+
     ss_total = sum((yi - fiAverage)**2 for yi in y)
+    
     R2 = 1 - (S / ss_total)
     x_mean = sumX / n
     y_mean = sumY / n
