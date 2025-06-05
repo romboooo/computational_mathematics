@@ -55,4 +55,4 @@ def exponentialApprox(x, y):
 
     interpretR(R2)
     
-    return {"a0": a0, "a1": a1, "S": S, "delta": delta, "R2": R2, "name": NAME, "model": polinomModel}
+    return {"a0": a0, "a1": a1, "S": S, "delta": round(delta,10), "R2": R2, "name": NAME, "model": polinomModel}

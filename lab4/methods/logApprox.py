@@ -51,7 +51,7 @@ def logApprox(x, y) -> dict[str, float]:
         "a": a,
         "b": b,
         "S": S,
-        "delta": delta,
+        "delta": round(delta,10),
         "R2": R2,
         "name": NAME,
         "model": polinomModel

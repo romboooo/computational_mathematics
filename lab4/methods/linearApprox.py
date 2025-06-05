@@ -59,7 +59,7 @@ def linealApprox(x,y) -> dict[str,float]:
         "a0": a0,
         "a1": a1,
         "S": S,
-        "delta": delta,
+        "delta": round(delta,10),
         "R2": R2,
         "r": r,
         "name": NAME,

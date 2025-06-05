@@ -62,7 +62,7 @@ def powerApprox(x: list[float], y: list[float]) -> dict[str, float]:
         "a": a,
         "b": b,
         "S": S,
-        "delta": delta,
+        "delta": round(delta,10),
         "R2": R2,
         "name": NAME,
         "model": polinomModel

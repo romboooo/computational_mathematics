@@ -9,7 +9,6 @@ from methods.squareApprox import squareApprox
 from methods.powerApprox import powerApprox
 from methods.logApprox import logApprox
 
-
 names = {
     1: "Кубическая",
     2: "Экспоненциальная",
@@ -24,7 +23,6 @@ def readData():
         x = np.array(list(map(float, file.readline().split())))
         y = np.array(list(map(float, file.readline().split())))
     return x, y
-
 
 def drawFunctions(x, y, results: List[Dict]):
 
@@ -64,17 +62,22 @@ def drawFunctions(x, y, results: List[Dict]):
     plt.savefig('approximations_comparison.png', dpi=300)
 
 def countResult(arr):
-    print("")
-    print("--- Подсчёт результатов ---")
-    minDelta = 1000000
-    bestModel = None
+    print("\n--- Подсчёт результатов ---")
+    
+    minDelta = float('inf')
     for func in arr:
         if func.get('delta') < minDelta:
-            bestModel = func
             minDelta = func.get('delta')
-
-    print(f"Лучшая модель: {names.get(bestModel.get('name'))}")
-    print(f"Значение СКО: {bestModel.get('delta')}")
+    
+    bestModels = []
+    for func in arr:
+        if func.get('delta') == minDelta:
+            bestModels.append(func)
+    
+    print(f"Минимальное СКО: {minDelta}")
+    print("Лучшие модели:")
+    for model in bestModels:
+        print(f"- {names.get(model.get('name'))} (СКО: {model.get('delta')})")
 
     
 def main():
@@ -83,6 +86,7 @@ def main():
         print("ошибка ввода точек")
         return
     print("--- Вычисления ---")
+    
     results = [
         squareApprox(x, y),
         linealApprox(x,y),

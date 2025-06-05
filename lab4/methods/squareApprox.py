@@ -58,7 +58,7 @@ def squareApprox(x, y) -> dict[str,float]:
         "a1": a1,
         "a2": a2,
         "S": S,
-        "delta": delta,
+        "delta": round(delta,10),
         "R2": R2,
         "name": NAME,
         "model": polinomModel

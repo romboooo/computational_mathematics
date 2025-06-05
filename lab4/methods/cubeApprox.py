@@ -50,7 +50,7 @@ def cubeApprox(x,y) -> dict[str,float]:
         fiAverage += fi[i]
 
     delta = np.sqrt(S / n)
-    
+
     fiAverage = 1 / n * sum(fi)
 
     ss_total = sum((yi - fiAverage)**2 for yi in y)
@@ -68,7 +68,7 @@ def cubeApprox(x,y) -> dict[str,float]:
         "a1": a1,
         "a2": a2,
         "S": S,
-        "delta": delta,
+        "delta": round(delta,10),
         "R2": R2,
         "name": NAME,
         "model": polinomModel
