@@ -41,7 +41,7 @@ def logApprox(x, y) -> dict[str, float]:
     ss_total = ((y - y_mean) ** 2).sum()
     R2 = 1 - (S / ss_total)
 
-    print(f"Формула: y = {a:.6f} * x^{b:.6f}")
+    print(f"Формула: y = {a:.6f} * lnx + {b:.6f}")
     print(f"Мера отклонения: S = {S:.6f}")
     print(f"Среднеквадратичное отклонение: δ = {delta:.6f}")
     print(f"Достоверность аппроксимации: R² = {R2:.6f}")
