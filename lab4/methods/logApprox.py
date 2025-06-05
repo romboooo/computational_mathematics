@@ -7,7 +7,7 @@ def logApprox(x, y) -> dict[str, float]:
     print("")
     print("--- Логарифмическая ---")
     if any(val <= 0 for val in x):
-        print("Метод неприменим. Все значения x и y должны быть положительными.")
+        print("Метод неприменим. Все значения x должны быть положительными.")
         return None
     
     n = len(x)

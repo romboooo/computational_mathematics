@@ -48,9 +48,13 @@ def cubeApprox(x,y) -> dict[str,float]:
         ei.append(fi[i] - y[i])
         S += ei[i] ** 2
         fiAverage += fi[i]
+
     delta = np.sqrt(S / n)
+    
     fiAverage = 1 / n * sum(fi)
+
     ss_total = sum((yi - fiAverage)**2 for yi in y)
+
     R2 = 1 - (S / ss_total)
 
     print(f"Формула: y = {a0:.6f}x³ + {a1:.6f}x² + {a2:.6f}x + {a3:.6f}")
