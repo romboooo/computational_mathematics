@@ -64,6 +64,7 @@ def newton_system(x0, y0, epsilon,choice):
             [diffFunc1ForX(x, y,choice), diffFunc1ForY(x, y,choice)],  # Строка для f1
             [diffFunc2ForX(x, y,choice), diffFunc2ForY(x, y,choice)]   # Строка для f2
         ])
+
         
         f1 = func1(x, y,choice)
         f2 = func2(x, y,choice)
@@ -73,9 +74,6 @@ def newton_system(x0, y0, epsilon,choice):
         print(f"x = {x:.6f}, y = {y:.6f}")
         print(f"F = [{f1:.6f}, {f2:.6f}]")
         
-        if np.linalg.norm(F) < epsilon:
-            print(f"Условие сходимости достигнуто (||F|| = {np.linalg.norm(F):.6f} < {epsilon})")
-            break
         
         try:
             delta = np.linalg.solve(J, -F)

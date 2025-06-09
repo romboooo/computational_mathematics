@@ -4,7 +4,7 @@ import numpy as np
 
 def func(x, choice):
     if choice == 1:
-        return 2.74 * x**3 - 1.93 * x**2 - 15.28 * x - 3.72
+        return x**3 + 2.28*x**2 - 1.934*x - 3.908
     if choice == 2:
         return x**3 - x + 4
     if choice == 3:
@@ -13,7 +13,7 @@ def func(x, choice):
 
 def df(x, choice):
     if choice == 1:
-        return 2.74 * 3 * x**2 - 1.93 * 2 * x - 15.28
+        return 3*x**2 + 4.56*x - 1.934
     elif choice == 2:
         return 3 * x**2 - 1
     elif choice == 3:
@@ -21,12 +21,39 @@ def df(x, choice):
 
 
 def getLambda(a,b,choice):
-    if max(df(a,choice), df(b,choice)) < 0:
-        print(f"lambda = {1 / max(df(a,choice), df(b,choice))}")
-        return 1 / max(df(a,choice), df(b,choice))
-    else: 
-        print(f"lambda = {-1 / max(df(a,choice), df(b,choice))}")
-        return -1 / max(df(a,choice), df(b,choice))
+    # xs = [a + (b - a) * i / 1000 for i in range(1001)]
+    xs = np.linspace(a,b,100) # можно не разбивать на 100 кусков просто проверить концы отрезка, мне лень + похуй испралять
+    m = max(abs(df(x,choice)) for x in xs)
+
+    maxx = -100000
+    for x in xs:
+        if (abs(df(x,choice))) > maxx:
+            maxx = (abs(df(x,choice)))
+            print(f"x = {x}")
+
+    
+    print(f"max: {maxx}")
+    print(f"df(2) = {df(maxx,choice)}")
+    print(f"df(2.1) = {df(2.1,choice)}")
+
+
+    if m == 0:
+        raise ValueError("Производная нулевая на всём интервале.")
+
+    all_positive = all(df(x,choice) >= 0 for x in xs)
+    all_negative = all(df(x,choice) <= 0 for x in xs)
+
+    
+    if all_positive:
+        lam = -1 / m
+        
+    elif all_negative:
+        lam = 1 / m
+    else:
+        avg_sign = 1 if (df(a,choice) + df(b,choice)) >= 0 else -1
+        lam = -avg_sign / m
+        print("Внимание: производная меняет знак. Сходимость не гарантирована.")
+    return lam
 
 
 def convergenceCondition(a, b, choice):
@@ -69,7 +96,6 @@ def count(a, b, epsilon, choice):
         except ValueError:
             fixi1 = float("nan")
 
-        mod = abs(xi1 - xi)
         print(f"| {i:8d}   | {xi:10.5f} |  {xi1:12.5f} | {fixi1:12.5f} | {fxi1:12.5f} | {abs(xi1 - xi):12.5f}  | ")
 
         if abs(fxi1) < epsilon and abs(xi1 - xi) < epsilon:
@@ -85,9 +111,9 @@ def count(a, b, epsilon, choice):
 def get_choice():
     while True:
         print("Выберите уравнение:")
-        print("1: 2.74x^3 - 1.93x^2 - 15.28x - 3.72 = 0")
-        print("2: x^3 - x + 4 = 0")
-        print("3: sin(x) - exp(-x) = 0")
+        print("1: x^3 + 2.28x^2 - 1.934x - 3.908")
+        print("2: x^3 - x + 4")
+        print("3: sin(x) - exp(-x)")
         try:
             choice = int(input())
             if choice in (1, 2, 3):
@@ -104,10 +130,6 @@ def get_interval(choice):
             a, b = map(float, input().split())
             if a > b:
                 a, b = b, a
-            if choice == 3:
-                if a <= 0 or b > math.pi:
-                    print("Для уравнения 3 интервал должен быть в (0, π].")
-                    continue
 
             changes = count_roots(a, b, choice)
             if changes == -1:
@@ -126,21 +148,36 @@ def get_interval(choice):
         except ValueError:
             print("Ошибка ввода. Введите два числа через пробел.")
 
-def count_roots(a, b, choice, steps=10000):
+def count_roots(a, b, choice, steps=1000):
+    tol = 1e-8
+    fa = func(a, choice)
+    fb = func(b, choice)
+    
+    if abs(fa) < tol or abs(fb) < tol:
+        return 1
+    
     xs = np.linspace(a, b, steps)
     values = []
     for x in xs:
         try:
-            values.append(func(x,choice))
+            values.append(func(x, choice))
         except Exception:
             values.append(np.nan)
+    
     sign_changes = 0
+    zero_points = 0
+    
+    for i in range(len(values)):
+        if not np.isnan(values[i]) and abs(values[i]) < tol:
+            zero_points += 1
+    
     for i in range(1, len(values)):
         if np.isnan(values[i - 1]) or np.isnan(values[i]):
             continue
         if values[i - 1] * values[i] < 0:
             sign_changes += 1
-    return sign_changes
+    
+    return sign_changes + zero_points
 
 choice = get_choice()
 a, b = get_interval(choice)

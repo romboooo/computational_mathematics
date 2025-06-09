@@ -55,7 +55,6 @@ def method(a, b, choice, epsilon):
         if iteration > 100:
             print("Достигнут лимит итераций!")
             break
-            return
 
     print("\nРезультат:")
     print(f"Найденный корень: x = {xi:.5f}")
