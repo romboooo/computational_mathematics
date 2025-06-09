@@ -22,21 +22,19 @@ def df(x, choice):
 
 def getLambda(a,b,choice):
     if max(df(a,choice), df(b,choice)) < 0:
-        print(f"lamda = {-1 / max(df(a,choice), df(b,choice))}")
-        return -1 / max(df(a,choice), df(b,choice))
-    else: 
-        print(f"lamda = {1 / max(df(a,choice), df(b,choice))}")
+        print(f"lambda = {1 / max(df(a,choice), df(b,choice))}")
         return 1 / max(df(a,choice), df(b,choice))
+    else: 
+        print(f"lambda = {-1 / max(df(a,choice), df(b,choice))}")
+        return -1 / max(df(a,choice), df(b,choice))
 
 
 def convergenceCondition(a, b, choice):
-    x = (a + b) / 2
     lam = getLambda(a,b,choice)
-
     diffFi = lambda x: 1 + lam * df(x,choice)
 
     try:
-        if abs(diffFi(x, choice)) >= 1:
+        if abs(diffFi(a)) >= 1 and abs(diffFi(b)):
             print("Условие сходимости не выполняется.")
             return False
         else:
@@ -53,7 +51,7 @@ def count(a, b, epsilon, choice):
     lam = getLambda(a,b,choice)
     
     fi = lambda x, choice: x + lam*func(x,choice)
-    diffFi = lambda x,choice: 1 + lam * df(x,choice)
+    diffFi = lambda x, choice: 1 + lam * df(x,choice)
 
     print(f"значения 𝝋'(a) = {diffFi(a,choice)}, 𝝋'(b) = {diffFi(b,choice)} ")
     print("\n|--Итерация--|-----xi-----|----xi+1-----|---𝝋(xi+1)-----|----f(xi+1)----|--|xi+1 - xi|--|")
@@ -153,3 +151,5 @@ if convergenceCondition(a, b, choice):
 else:
     print("Метод простых итераций может не сойтись.")
     count(a, b, epsilon, choice)
+
+
