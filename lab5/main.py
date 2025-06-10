@@ -1,5 +1,6 @@
 import numpy as np
 
+from methods.newtonWithDivDif import newtonWithDividedDifferences
 from methods.lagrange import lagrange
 import time
 
@@ -23,9 +24,9 @@ def readFromConsole():
     x = np.array(list(map(float, input().split())))
     print("Введите значения y через пробел:")
     y = np.array(list(map(float, input().split())))
-    print("Введите значение xi:")
-    xi = input().strip()
-    return x, y, xi
+    print("Введите значение x_:")
+    x_ = input().strip()
+    return x, y, x_
 
 def dispatchToConsole():
     print("Возникла ошибка, желаете ввести данные с консоли?")
@@ -56,15 +57,15 @@ def readFromFile():
             x = np.array(list(map(float, lines[0].split())))
             y = np.array(list(map(float, lines[1].split())))
             
-            xi_str = lines[2].strip()
+            x__str = lines[2].strip()
             
-            if not xi_str:
+            if not x__str:
                 print("Ошибка: третья строка пустая")
                 return dispatchToConsole()
                 
             
             try:
-                xi = float(xi_str)
+                x_ = float(x__str)
             except ValueError:
                 print("Ошибка: в третьей строке должно быть одно число")
                 return dispatchToConsole()
@@ -82,13 +83,14 @@ def readFromFile():
     if len(x) != len(y) or len(x) == 0:
         print("Ошибка: массивы x и y разной длины или пустые")
         return dispatchToConsole()
-    return x, y, xi
+    return x, y, x_
 
 
 
 def main():
-    x,y,xi = readData()
-    print(lagrange(x,y,xi))
+    x,y,x_ = readData()
+    lagrangeOut = lagrange(x,y,x_)
+    newtonWithDividedDifferences()
 
 if __name__ == "__main__":
     main()

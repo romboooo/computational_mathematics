@@ -1,4 +1,4 @@
-def lagrange(x,y,xi):
+def lagrange(x,y,x_):
     length = len(x)
     result = 0
     for i in range(length):
@@ -7,7 +7,7 @@ def lagrange(x,y,xi):
             if i != j:
                 if x[i] == x[j]:
                     raise ValueError("Узлы интерполяции должны быть различными")
-                term *= (xi - x[j]) / (x[i] - x[j])
+                term *= (x_ - x[j]) / (x[i] - x[j])
         
         result += term  
     
