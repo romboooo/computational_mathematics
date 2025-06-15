@@ -1,5 +1,6 @@
 import numpy as np
 
+from methods.newtonWithFiniteDif import newtonWithFiniteDifferences
 from methods.newtonWithDivDif import newtonWithDividedDifferences
 from methods.lagrange import lagrange
 import time
@@ -91,6 +92,7 @@ def main():
     x,y,x_ = readData()
     lagrange(x,y,x_)
     newtonWithDividedDifferences(x,y,x_)
+    newtonWithFiniteDifferences(x,y,x_)
 
 if __name__ == "__main__":
     main()
