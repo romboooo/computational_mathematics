@@ -89,8 +89,8 @@ def readFromFile():
 
 def main():
     x,y,x_ = readData()
-    lagrangeOut = lagrange(x,y,x_)
-    newtonWithDividedDifferences()
+    lagrange(x,y,x_)
+    newtonWithDividedDifferences(x,y,x_)
 
 if __name__ == "__main__":
     main()
