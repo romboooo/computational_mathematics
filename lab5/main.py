@@ -149,8 +149,12 @@ def main():
     else:
         newtonOut = newtonWithDividedDifferences(x,y,x_)
 
-    newtonOut = lagrange(x,y,x_)
+    lagrangeOut = lagrange(x,y,x_)
 
+    print("------------------------------------------------\n")
+    print("Результаты:")
+    print(f"Лагранж: {lagrangeOut}")
+    print(f"Ньютон: {newtonOut}")
 
 if __name__ == "__main__":
     main()
