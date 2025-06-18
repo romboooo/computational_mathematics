@@ -20,11 +20,10 @@ def print_difference_table(x, diff_table):
             print(f"{diff_table[i][j]:<15.6f}", end="")
         print()
 
-def calculate_newton(x, y, x_):
+def calculate_newton_forward(x, y, x_, diff_table):
     n = len(x)
     h = x[1] - x[0]
     t = (x_ - x[0]) / h
-    diff_table = build_difference_table(x, y)
     
     result = diff_table[0][0]
     term = t
@@ -41,8 +40,6 @@ def calculate_newton(x, y, x_):
             bracket_expr += f"*({t:.4f}-{j})"
         bracket_expr += "]"
         
-        operator = "*" if i == 1 else " + "
-        
         if i == 1:
             computation_str += f" + {t:.4f} * {delta:.6f} / {factorial}"
         else:
@@ -53,11 +50,44 @@ def calculate_newton(x, y, x_):
     
     return result, computation_str
 
+def calculate_newton_backward(x, y, x_, diff_table):
+    n = len(x)
+    h = x[1] - x[0]
+    t = (x_ - x[-1]) / h
+    
+    diff_table_rev = []
+    for k in range(n):
+        i = n - 1 - k
+        if k < len(diff_table[i]):
+            diff_table_rev.append(diff_table[i][k])
+    
+    result = diff_table_rev[0]
+    term = 1
+    factorial_val = 1
+    computation_str = f"{diff_table_rev[0]:.6f}"
+    
+    for i in range(1, len(diff_table_rev)):
+        term = term * (t + i - 1)
+        factorial_val *= i
+        delta = diff_table_rev[i]
+        component = term * delta / factorial_val
+        result += component
+        
+        bracket_expr = f"[{t:.4f}"
+        for j in range(1, i):
+            bracket_expr += f"*({t:.4f}+{j})"
+        bracket_expr += "]"
+        
+        computation_str += f" + {bracket_expr} * {delta:.6f} / {factorial_val}"
+    
+    return result, computation_str
+
 def newtonWithFiniteDifferences(x, y, x_):
     print("\nМногочлен Ньютона с конечными разностями\n")
     
     if len(x) != len(y):
         raise ValueError("Ошибка: массивы x и y должны иметь одинаковую длину")
+    
     h = x[1] - x[0]
     for i in range(1, len(x)-1):
         if abs((x[i+1] - x[i]) - h) > 1e-6:
@@ -67,24 +97,32 @@ def newtonWithFiniteDifferences(x, y, x_):
     print("Таблица конечных разностей:")
     print_difference_table(x, diff_table)
     
-    print("\nФормула многочлена Ньютона:")
-    print("N(x) = y0 + t*Δy0 + [t(t-1)/2!]*Δ²y0 + [t(t-1)(t-2)/3!]*Δ³y0 + ...")
-    
     n = len(x)
-    h = x[1] - x[0]
-    t = (x_ - x[0]) / h
-    print(f"\nВычисление для точки x = {x_}")
-    print(f"t = (x - x0)/h = ({x_} - {x[0]})/{h} = {t:.4f}\n")
+    mid_point = (x[0] + x[-1]) / 2
     
-    result, computation_str = calculate_newton(x, y, x_)
-    
-    symbolic_formula = "N(x_) = y0"
-    for i in range(1, n):
-        if i == 1:
-            symbolic_formula += " + [t] * Δ^1y0 / 1!"
-        else:
+    if x_ <= mid_point:
+        print("\nформула ньютона ВПЕРЁД")
+        formula_desc = "N(x) = y0 + t*Δy0 + [t(t-1)/2!]*Δ²y0 + [t(t-1)(t-2)/3!]*Δ³y0 + ..."
+        t_val = (x_ - x[0]) / h
+        result, computation_str = calculate_newton_forward(x, y, x_, diff_table)
+        
+        symbolic_formula = "N(x_) = y0"
+        for i in range(1, n):
             deltas = "*".join([f"(t-{j})" for j in range(i-1)])
-            symbolic_formula += f" + [t{deltas}] * Δ^{i}y0 / {i}!"
+
+    else:
+        print("\nФормула Ньютона НАЗАд")
+        formula_desc = "N(x) = yn + t*∇yn + [t(t+1)/2!]*∇²yn + [t(t+1)(t+2)/3!]*∇³yn + ..."
+        t_val = (x_ - x[1]) / h
+        result, computation_str = calculate_newton_backward(x, y, x_, diff_table)
+        
+        symbolic_formula = f"N(x_) = y_{n-1}"
+
+    print(formula_desc)
+    
+    print(f"\nВычисление для точки x = {x_}")
+    print(f"t = (x - {'x0' if x_ <= mid_point else f'x1'})/h = "
+          f"({x_} - {x[0] if x_ <= mid_point else x[-1]})/{h} = {t_val:.4f}\n")
     
     print(f"{symbolic_formula} = ")
     print(computation_str + f" = {result:.6f}")
