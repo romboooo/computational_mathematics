@@ -1,32 +1,31 @@
 import math
 
 def choose_odu():
-    print("Выберете ОДУ:")
-    print("1. x + y")
-    print("2. sin(x) - y")
-    print("3. y / x")
+    import math
+    print("Выберите ОДУ:")
+    print("1. y' = x + y")
+    print("2. y' = sin(x) - y")
+    print("3. y' = y / x")
 
     while True:
         try:
-            input_func = int(input('> Выберите ОДУ [1/2/3]: '))
-            if input_func == 1:
+            choice = int(input('> Выберите ОДУ [1/2/3]: '))
+            if choice == 1:
                 f = lambda x, y: x + y
                 exact_y = lambda x, x0, y0: math.exp(x - x0) * (y0 + x0 + 1) - x - 1
-                break
-            elif input_func == 2:
+                return f, exact_y
+            elif choice == 2:
                 f = lambda x, y: math.sin(x) - y
-                exact_y = lambda x, x0, y0: (2*math.exp(x0)* y0-math.exp(x0)*math.sin(x0)+math.exp(x0)*math.cos(x0)) / (2*math.exp(x)) + (math.sin(x)) / 2 - (math.cos(x)) / 2
-                break
-            elif input_func == 3:
+                exact_y = lambda x, x0, y0: (y0 - 0.5*math.sin(x0) + 0.5*math.cos(x0)) * math.exp(x0 - x) + 0.5*math.sin(x) - 0.5*math.cos(x)
+                return f, exact_y
+            elif choice == 3:
                 f = lambda x, y: y / x
-                exact_y = lambda x, x0, y0: (x*y0) / x0
-                break
+                exact_y = lambda x, x0, y0: y0 * math.exp(math.log(x) - math.log(x0))  
+                return f, exact_y
             else:
-                print("Некоррентный ввод! Попробуйте еще")
-
-        except:
-            print("Некоррентный ввод! Попробуйте еще")
-    return f, exact_y
+                print("Некорректный ввод! Попробуйте снова")
+        except ValueError:
+            print("Некорректный ввод! Введите число")
 
 def read_data():
     while True:
