@@ -1,3 +1,6 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
 def build_difference_table(x, y):
     n = len(x)
     diff_table = [[0] * n for _ in range(n)]
@@ -29,12 +32,14 @@ def calculate_newton_forward(x, y, x_, diff_table):
     result = diff_table[0][0]
     term = t
     factorial = 1
-    
+    print("Конечные разности, задающие многочлен")
+    print(result)
     for i in range(1, n):
         delta = diff_table[0][i]
         result += term * delta / factorial
         term *= (t - i)
         factorial *= (i + 1)
+        print(delta)
     
     return result, t
 
@@ -52,12 +57,15 @@ def calculate_newton_backward(x, y, x_, diff_table):
     result = diff_table_rev[0]
     term = 1
     factorial_val = 1
-    
+    print("Конечные разности, задающие многочлен")
+    print(result)
     for i in range(1, len(diff_table_rev)):
         term = term * (t + i - 1)
         factorial_val *= i
         delta = diff_table_rev[i]
         result += term * delta / factorial_val
+        print(delta)
+
     
     return result, t
 
@@ -87,4 +95,38 @@ def newtonWithFiniteDifferences(x, y, x_):
     
     print(f"t = (x - {'x0' if x_ <= mid_point else 'xn'})/h = ({x_} - {base})/{h} = {t_val:.6f}")
     print(f"\nФинальный результат: N({x_}) = {result:.6f}")
+
+    # draw_graph(x, y, result,mid_point, diff_table,x_)
+    
+
     return result
+
+def draw_graph(x, y, result,mid_point, diff_table,x_):
+    plt.figure(figsize=(10, 6))
+    
+    plt.scatter(x, y, color='red', zorder=5, label='Исходные данные')
+    
+    plt.scatter([x_], [result], color='green', zorder=5, label=f'Точка интерполяции (x={x_}, y={result:.4f})')
+    
+    x_min, x_max = min(x), max(x)
+    x_range = np.linspace(x_min, x_max, 1000)
+    y_range = []
+    
+    for point in x_range:
+        if point <= mid_point:
+            y_val, _ = calculate_newton_forward(x, y, point, diff_table)
+        else:
+            y_val, _ = calculate_newton_backward(x, y, point, diff_table)
+        y_range.append(y_val)
+    
+    plt.plot(x_range, y_range, label='Интерполяционный многочлен Ньютона', color='blue')
+    
+    plt.title('Интерполяция методом Ньютона')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.legend()
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    
+    plt.savefig('newton_interpolation.png', dpi=300)
+    # plt.show()
