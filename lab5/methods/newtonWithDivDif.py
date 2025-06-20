@@ -3,59 +3,62 @@ import numpy as np
 
 def divided_differences(x, y):
     n = len(x)
-    table = [y.copy()]
-    print("Многочлен ньютона с разделёнными разностями:\n")
+    table = [y.copy()]  
     
-    first_order = []
-    for j in range(n-1):
-        num = table[0][j+1] - table[0][j]
-        den = x[j+1] - x[j]
-        value = num / den
-        first_order.append(value)
-        print(f"f(x_{j}, x_{j+1}) = (f(x_{j+1}) - f(x_{j}))/(x_{j+1} - x_{j}) = "
-              f"({table[0][j+1]:.3f} - {table[0][j]:.3f})/({x[j+1]:.3f} - {x[j]:.3f}) = {value:.3f}")
-    table.append(first_order)
-    
-    for i in range(2, n):
-        current = []
-        for j in range(n - i):
-            num = table[i-1][j+1] - table[i-1][j]
-            den = x[j+i] - x[j]
+    for order in range(1, n):
+        current_order = []
+        prev_order = table[order-1]
+        for j in range(n - order):
+            num = prev_order[j+1] - prev_order[j]
+            den = x[j+order] - x[j]
             value = num / den
-            current.append(value)
-            print(f"f(x_{j},...,x_{j+i}) = (f(x_{j+1},...,x_{j+i}) - f(x_{j},...,x_{j+i-1}))/(x_{j+i} - x_{j}) = "
-                  f"({table[i-1][j+1]:.3f} - {table[i-1][j]:.3f})/({x[j+i]:.3f} - {x[j]:.3f}) = {value:.3f}")
-        table.append(current)
+            current_order.append(value)
+        table.append(current_order)
     return table
+
+def print_dd_table(x, y, table):
+    n = len(x)
+    header = " i |   x_i    |   y_i    |"
+    for i in range(1, n):
+        header += f"   f[{i}]    |"
+    print(header)
+    separator = "-" * len(header)
+    print(separator)
+    
+    for i in range(n):
+        row = f"{i:2d}  | {x[i]:8.4f}  | {y[i]:8.4f}  |"
+        for k in range(1, n - i):
+            if i < len(table[k]):
+                row += f" {table[k][i]:8.4f}  |"
+            else:
+                row += " " * 9 + "|"
+        print(row)
 
 def newtonWithDividedDifferences(x, y, x_):
     table = divided_differences(x, y)
     n = len(x)
-    res = table[0][0]
-    mn = 1
-    terms = [f"{res:.3f}"]
-    products = ["1"]
-    values = [res]
     
-    print("\nВычисление значения в точке x =", f"{x_:.3f}")
+    print("Таблица разделённых разностей:")
+    print_dd_table(x, y, table)
+    print("\n")
+    
+    res = table[0][0]  
+    mn = 1.0  
+    
+    print("Ньютон (разделённые разности):")
+    print(f"f[x0] = {res:.7f}")
+    
     for i in range(1, n):
         mn *= (x_ - x[i-1])
-        term = table[i][0] * mn
+        dd = table[i][0]  
+        term = dd * mn
         res += term
-        
-        prod_expr = "*".join([f"({x_:.3f} - {x[k]:.3f})" for k in range(i)])
-        terms.append(f"{table[i][0]:.3f} * {prod_expr}")
-        products.append(f"{mn:.3f}")
-        values.append(term)
+        print(f"f[x0..x{i}] = {dd:.7f}")
     
-    print("Интерполяционный многочлен Ньютона:\n")
-    print(f"N_{n-1}(x) = " + " + ".join(terms) + f" = {res:.5f}\n")
-    
-    print(f"Результат: y({x_:.3f}) ≈ {res:.5f}")
-
-
-    draw_graph(True,table,n,x,x_,res,y)
+    print(f"\nP(x) = {res}")
+    # draw_graph(True,table,n,x,x_,res,y)
     return res
+
 
 
 def draw_graph(plot,table,n,x,x_,res,y):
