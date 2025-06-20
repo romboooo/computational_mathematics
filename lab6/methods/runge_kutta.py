@@ -24,10 +24,11 @@ def runge_kutt(f, x0, y0, xn, n, epsilon, exact_y):
 
     print("\nРезультат:")
     print("x\t\tПриближенное y\t\tТочное y\t\tПогрешность")
+    print("------------------------------------------------------------------------------------")
     for i in range(len(x_arr)):
         exact = exact_y(x_arr[i], x0_init, y0_init)
         error = abs(y_arr[i] - exact)
-        print(f"{x_arr[i]:.6f}\t{y_arr[i]:.12f}\t{exact:.12f}\t{error:.2e}")
+        print(f"{x_arr[i]:.6f}\t{y_arr[i]:.12f}\t\t{exact:.12f}\t\t{error:.2e}")
     
     final_error = abs(y_arr[-1] - exact_y(xn, x0_init, y0_init))
     if final_error < epsilon:
