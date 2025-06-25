@@ -9,6 +9,8 @@ def runge_kutt(f, x0, y0, xn, n, epsilon):
     iteration_count = 0
     R = float("inf")
 
+    y_n_history = []
+
     while R >= epsilon and iteration_count < max_iterations:
         h = (xn - x0) / n
         x_arr = [x0]
@@ -29,35 +31,22 @@ def runge_kutt(f, x0, y0, xn, n, epsilon):
             y_arr.append(next_y)
             x_arr.append(next_x)
 
-        n2 = 2 * n
-        h2 = (xn - x0) / n2
-        x_arr2 = [x0]
-        y_arr2 = [y0]
+        y_n_history.append(y_arr[-1])
 
-        for _ in range(n2):
-            xi = x_arr2[-1]
-            yi = y_arr2[-1]
+        if len(y_n_history) >= 2:
+            yh_n, yh2_n = y_arr[len(y_arr) - 2 :]
+            R = abs(yh_n - yh2_n) / (2**p - 1)
 
-            k1 = h2 * f(xi, yi)
-            k2 = h2 * f(xi + h2 / 2, yi + k1 / 2)
-            k3 = h2 * f(xi + h2 / 2, yi + k2 / 2)
-            k4 = h2 * f(xi + h2, yi + k3)
-
-            next_y = yi + (k1 + 2 * k2 + 2 * k3 + k4) / 6
-            next_x = xi + h2
-
-            y_arr2.append(next_y)
-            x_arr2.append(next_x)
-
-        yh = y_arr[-1]
-        yh2 = y_arr2[-1]
-        R = abs(yh - yh2) / (2**p - 1)
-
-        if R >= epsilon:
-            print(f"Точность не достигнута при n={n}: R = {R:.2e} >= ε = {epsilon}")
+            if R >= epsilon:
+                print(f"Точность не достигнута при n={n}: R = {R:.2e} >= ε ({epsilon})")
+                print(f"Удваиваем число шагов: n = {n} -> {2*n}")
+            else:
+                break
+        else:
             print(f"Удваиваем число шагов: n = {n} -> {2*n}")
-            n *= 2
-            iteration_count += 1
+
+        n *= 2
+        iteration_count += 1
 
     print("\n" + "=" * 80)
     print("ФИНАЛЬНЫЕ РЕЗУЛЬТАТЫ")
