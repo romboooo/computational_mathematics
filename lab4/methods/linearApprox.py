@@ -5,7 +5,8 @@ from helpers.interpretationCorrel import interCorrel
 
 NAME = 3
 
-def linealApprox(x,y) -> dict[str,float]:
+
+def linealApprox(x, y) -> dict[str, float]:
     print("")
     print("--- Линейная ---")
     n = len(x)
@@ -26,8 +27,8 @@ def linealApprox(x,y) -> dict[str,float]:
         print("ошибка в вычислении матрицы")
 
     def polinomModel(x):
-        return a0*x + a1
-    
+        return a0 * x + a1
+
     fi = []
     ei = []
     S = 0
@@ -40,13 +41,15 @@ def linealApprox(x,y) -> dict[str,float]:
     delta = np.sqrt(S / n)
     fiAverage = 1 / n * sum(fi)
 
-    ss_total = sum((yi - fiAverage)**2 for yi in y)
-    
+    ss_total = sum((yi - fiAverage) ** 2 for yi in y)
+
     R2 = 1 - (S / ss_total)
     x_mean = sumX / n
     y_mean = sumY / n
     numerator = sum((xi - x_mean) * (yi - y_mean) for xi, yi in zip(x, y))
-    denominator = np.sqrt(sum((xi - x_mean)**2 for xi in x) * sum((yi - y_mean)**2 for yi in y))
+    denominator = np.sqrt(
+        sum((xi - x_mean) ** 2 for xi in x) * sum((yi - y_mean) ** 2 for yi in y)
+    )
     r = numerator / denominator
 
     print(f"Формула: y = {a0:.6f}x + {a1:.6f}")
@@ -61,9 +64,9 @@ def linealApprox(x,y) -> dict[str,float]:
         "a0": a0,
         "a1": a1,
         "S": S,
-        "delta": round(delta,10),
+        "delta": round(delta, 10),
         "R2": R2,
         "r": r,
         "name": NAME,
-        "model": polinomModel
+        "model": polinomModel,
     }

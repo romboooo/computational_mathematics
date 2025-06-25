@@ -4,7 +4,7 @@ import numpy as np
 
 def func(x, choice):
     if choice == 1:
-        return x**3 + 2.28*x**2 - 1.934*x - 3.908
+        return x**3 + 2.28 * x**2 - 1.934 * x - 3.908
     if choice == 2:
         return x**3 - x + 4
     if choice == 3:
@@ -13,52 +13,51 @@ def func(x, choice):
 
 def df(x, choice):
     if choice == 1:
-        return 3*x**2 + 4.56*x - 1.934
+        return 3 * x**2 + 4.56 * x - 1.934
     elif choice == 2:
         return 3 * x**2 - 1
     elif choice == 3:
         return math.cos(x) + math.exp(-x)
 
 
-def getLambda(a,b,choice):
+def getLambda(a, b, choice):
     # xs = [a + (b - a) * i / 1000 for i in range(1001)]
-    xs = np.linspace(a,b,100) # можно не разбивать на 100 кусков просто проверить концы отрезка, мне лень + похуй испралять
-    m = max(abs(df(x,choice)) for x in xs)
+    xs = np.linspace(
+        a, b, 100
+    )  # можно не разбивать на 100 кусков просто проверить концы отрезка, мне лень + похуй испралять
+    m = max(abs(df(x, choice)) for x in xs)
 
     maxx = -100000
     for x in xs:
-        if (abs(df(x,choice))) > maxx:
-            maxx = (abs(df(x,choice)))
+        if (abs(df(x, choice))) > maxx:
+            maxx = abs(df(x, choice))
             print(f"x = {x}")
 
-    
     print(f"max: {maxx}")
     print(f"df(2) = {df(maxx,choice)}")
     print(f"df(2.1) = {df(2.1,choice)}")
 
-
     if m == 0:
         raise ValueError("Производная нулевая на всём интервале.")
 
-    all_positive = all(df(x,choice) >= 0 for x in xs)
-    all_negative = all(df(x,choice) <= 0 for x in xs)
+    all_positive = all(df(x, choice) >= 0 for x in xs)
+    all_negative = all(df(x, choice) <= 0 for x in xs)
 
-    
     if all_positive:
         lam = -1 / m
-        
+
     elif all_negative:
         lam = 1 / m
     else:
-        avg_sign = 1 if (df(a,choice) + df(b,choice)) >= 0 else -1
+        avg_sign = 1 if (df(a, choice) + df(b, choice)) >= 0 else -1
         lam = -avg_sign / m
         print("Внимание: производная меняет знак. Сходимость не гарантирована.")
     return lam
 
 
 def convergenceCondition(a, b, choice):
-    lam = getLambda(a,b,choice)
-    diffFi = lambda x: 1 + lam * df(x,choice)
+    lam = getLambda(a, b, choice)
+    diffFi = lambda x: 1 + lam * df(x, choice)
 
     try:
         if abs(diffFi(a)) >= 1 and abs(diffFi(b)):
@@ -75,14 +74,18 @@ def convergenceCondition(a, b, choice):
 def count(a, b, epsilon, choice):
     xi = (a + b) / 2
     i = 1
-    lam = getLambda(a,b,choice)
-    
-    fi = lambda x, choice: x + lam*func(x,choice)
-    diffFi = lambda x, choice: 1 + lam * df(x,choice)
+    lam = getLambda(a, b, choice)
+
+    fi = lambda x, choice: x + lam * func(x, choice)
+    diffFi = lambda x, choice: 1 + lam * df(x, choice)
 
     print(f"значения 𝝋'(a) = {diffFi(a,choice)}, 𝝋'(b) = {diffFi(b,choice)} ")
-    print("\n|--Итерация--|-----xi-----|----xi+1-----|---𝝋(xi+1)-----|----f(xi+1)----|--|xi+1 - xi|--|")
-    print("|------------|------------|-------------|---------------|--------------|---------------|")
+    print(
+        "\n|--Итерация--|-----xi-----|----xi+1-----|---𝝋(xi+1)-----|----f(xi+1)----|--|xi+1 - xi|--|"
+    )
+    print(
+        "|------------|------------|-------------|---------------|--------------|---------------|"
+    )
 
     while True:
         try:
@@ -96,10 +99,14 @@ def count(a, b, epsilon, choice):
         except ValueError:
             fixi1 = float("nan")
 
-        print(f"| {i:8d}   | {xi:10.5f} |  {xi1:12.5f} | {fixi1:12.5f} | {fxi1:12.5f} | {abs(xi1 - xi):12.5f}  | ")
+        print(
+            f"| {i:8d}   | {xi:10.5f} |  {xi1:12.5f} | {fixi1:12.5f} | {fxi1:12.5f} | {abs(xi1 - xi):12.5f}  | "
+        )
 
         if abs(fxi1) < epsilon and abs(xi1 - xi) < epsilon:
-            print(f"Найден корень: xi = {xi1:.6f}, f(xi) = {func(xi1, choice):.15f}, итераций: {i}")
+            print(
+                f"Найден корень: xi = {xi1:.6f}, f(xi) = {func(xi1, choice):.15f}, итераций: {i}"
+            )
             break
         i += 1
         if i > 50:
@@ -122,6 +129,7 @@ def get_choice():
                 print("Нет такого варианта. Введите 1, 2 или 3.")
         except ValueError:
             print("Введите целое число.")
+
 
 def get_interval(choice):
     while True:
@@ -148,14 +156,15 @@ def get_interval(choice):
         except ValueError:
             print("Ошибка ввода. Введите два числа через пробел.")
 
+
 def count_roots(a, b, choice, steps=1000):
     tol = 1e-8
     fa = func(a, choice)
     fb = func(b, choice)
-    
+
     if abs(fa) < tol or abs(fb) < tol:
         return 1
-    
+
     xs = np.linspace(a, b, steps)
     values = []
     for x in xs:
@@ -163,21 +172,22 @@ def count_roots(a, b, choice, steps=1000):
             values.append(func(x, choice))
         except Exception:
             values.append(np.nan)
-    
+
     sign_changes = 0
     zero_points = 0
-    
+
     for i in range(len(values)):
         if not np.isnan(values[i]) and abs(values[i]) < tol:
             zero_points += 1
-    
+
     for i in range(1, len(values)):
         if np.isnan(values[i - 1]) or np.isnan(values[i]):
             continue
         if values[i - 1] * values[i] < 0:
             sign_changes += 1
-    
+
     return sign_changes + zero_points
+
 
 choice = get_choice()
 a, b = get_interval(choice)
@@ -188,5 +198,3 @@ if convergenceCondition(a, b, choice):
 else:
     print("Метод простых итераций может не сойтись.")
     count(a, b, epsilon, choice)
-
-

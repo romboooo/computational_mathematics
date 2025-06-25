@@ -1,9 +1,11 @@
 import numpy as np
 
 from helpers.interpretationR import interpretR
+
 NAME = 1
 
-def cubeApprox(x,y) -> dict[str,float]:
+
+def cubeApprox(x, y) -> dict[str, float]:
     print("")
     print("--- Кубическая ---")
     n = len(x)
@@ -37,8 +39,8 @@ def cubeApprox(x,y) -> dict[str,float]:
         print("ошибка в вычислении матрицы")
 
     def polinomModel(x):
-        return a0 + a1 * x + a2 * x**2 + a3*x**3
-    
+        return a0 + a1 * x + a2 * x**2 + a3 * x**3
+
     fi = []
     ei = []
     S = 0
@@ -53,7 +55,7 @@ def cubeApprox(x,y) -> dict[str,float]:
 
     fiAverage = 1 / n * sum(fi)
 
-    ss_total = sum((yi - fiAverage)**2 for yi in y)
+    ss_total = sum((yi - fiAverage) ** 2 for yi in y)
 
     R2 = 1 - (S / ss_total)
 
@@ -68,8 +70,8 @@ def cubeApprox(x,y) -> dict[str,float]:
         "a1": a1,
         "a2": a2,
         "S": S,
-        "delta": round(delta,10),
+        "delta": round(delta, 10),
         "R2": R2,
         "name": NAME,
-        "model": polinomModel
+        "model": polinomModel,
     }

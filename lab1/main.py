@@ -137,6 +137,7 @@ def rearrange_matrix(matrix):
 
     return perm
 
+
 def normaCount(matrix) -> int:
     max = 0
     for i in range(0, len(matrix)):
@@ -144,6 +145,7 @@ def normaCount(matrix) -> int:
         if summ > max:
             max = summ
     return max
+
 
 def expressVariables(matrix, array):
     for i in range(0, len(matrix)):
@@ -167,6 +169,7 @@ def expressVariables(matrix, array):
                 matrix[i][j] = -matrix[i][j] / num
                 continue
     return matrix, array
+
 
 def drawSlauSystem(matrix, array):
     print("Выразим диагональные коэффиценты")
@@ -205,7 +208,9 @@ def convergenceСondition(num):
     if num < 1:
         print(f"норма: {num} < 1 => условие сходимости выполняется, всё ок")
     else:
-        print(f"норма: {num} !< 1 => условие сходимости не выполняется НО! продолжаем считать")
+        print(
+            f"норма: {num} !< 1 => условие сходимости не выполняется НО! продолжаем считать"
+        )
 
 
 def absoluteDeviationCriterion(x_prev, x_current, epsilon):
@@ -264,7 +269,7 @@ if perm is not None:
 
     normaCount(C)
 
-    convergenceСondition(normaCount(C)) 
+    convergenceСondition(normaCount(C))
     simpleIterations(C, d, inputValues.epsilon)
 else:
     print("Невозможно преобразовать матрицу.")
@@ -275,5 +280,5 @@ else:
 
     normaCount(C)
 
-    convergenceСondition(normaCount(C))  
+    convergenceСondition(normaCount(C))
     simpleIterations(C, d, inputValues.epsilon)
