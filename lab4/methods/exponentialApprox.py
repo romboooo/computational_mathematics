@@ -23,12 +23,11 @@ def exponentialApprox(x, y):
     sum_x_ln_y = np.sum(x_arr * ln_y)
 
     A = np.array([[sum_xx, sum_x], [sum_x, n]])
-    B = np.array([sum_x_ln_y,sum_ln_y])
-    
+    B = np.array([sum_x_ln_y, sum_ln_y])
 
     try:
         solution = np.linalg.solve(A, B)
-        a1 = solution[0]  
+        a1 = solution[0]
         a0 = solution[1]
     except np.linalg.LinAlgError:
         print("Система уравнений вырождена")
@@ -54,5 +53,13 @@ def exponentialApprox(x, y):
     print(f"Достоверность аппроксимации: R² = {R2:.6f}")
 
     interpretR(R2)
-    
-    return {"a0": a0, "a1": a1, "S": S, "delta": round(delta,10), "R2": R2, "name": NAME, "model": polinomModel}
+
+    return {
+        "a0": a0,
+        "a1": a1,
+        "S": S,
+        "delta": round(delta, 10),
+        "R2": R2,
+        "name": NAME,
+        "model": polinomModel,
+    }

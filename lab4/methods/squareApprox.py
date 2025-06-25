@@ -4,7 +4,8 @@ from helpers.interpretationR import interpretR
 
 NAME = 6
 
-def squareApprox(x, y) -> dict[str,float]:
+
+def squareApprox(x, y) -> dict[str, float]:
     print("")
     print("--- Квадратичная ---")
     n = len(x)
@@ -16,13 +17,8 @@ def squareApprox(x, y) -> dict[str,float]:
     sumX2Y = sum(X**2 * Y for X, Y in zip(x, y))
     sumX4 = sum(X**4 for X in x)
 
-    A = np.array([
-        [n, sumX, sumX2], 
-        [sumX, sumX2, sumX3], 
-        [sumX2, sumX3, sumX4]
-        ]
-    )
-    
+    A = np.array([[n, sumX, sumX2], [sumX, sumX2, sumX3], [sumX2, sumX3, sumX4]])
+
     B = np.array([sumY, sumXY, sumX2Y])
 
     try:
@@ -50,9 +46,8 @@ def squareApprox(x, y) -> dict[str,float]:
 
     delta = np.sqrt(S / n)
     fiAverage = 1 / n * sum(fi)
-    ss_total = sum((yi - fiAverage)**2 for yi in y)
+    ss_total = sum((yi - fiAverage) ** 2 for yi in y)
     R2 = 1 - (S / ss_total)
-
 
     print(f"Формула: y = {a2:.6f}x² + {a1:.6f}x + {a0:.6f}")
     print(f"Мера отклонения: S = {S:.6f}")
@@ -65,8 +60,8 @@ def squareApprox(x, y) -> dict[str,float]:
         "a1": a1,
         "a2": a2,
         "S": S,
-        "delta": round(delta,10),
+        "delta": round(delta, 10),
         "R2": R2,
         "name": NAME,
-        "model": polinomModel
+        "model": polinomModel,
     }

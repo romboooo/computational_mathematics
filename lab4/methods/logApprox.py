@@ -3,13 +3,15 @@ import numpy as np
 from helpers.interpretationR import interpretR
 
 NAME = 4
+
+
 def logApprox(x, y) -> dict[str, float]:
     print("")
     print("--- Логарифмическая ---")
     if any(val <= 0 for val in x):
         print("Метод неприменим. Все значения x должны быть положительными.")
         return None
-    
+
     n = len(x)
     x_arr = np.array(x)
     y_arr = np.array(y)
@@ -51,8 +53,8 @@ def logApprox(x, y) -> dict[str, float]:
         "a": a,
         "b": b,
         "S": S,
-        "delta": round(delta,10),
+        "delta": round(delta, 10),
         "R2": R2,
         "name": NAME,
-        "model": polinomModel
+        "model": polinomModel,
     }

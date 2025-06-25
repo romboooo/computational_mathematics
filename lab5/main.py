@@ -1,16 +1,17 @@
 import numpy as np
-import math 
+import math
 from methods.newtonWithFiniteDif import newtonWithFiniteDifferences
 from methods.newtonWithDivDif import newtonWithDividedDifferences
 from methods.lagrange import lagrange
 import time
+
 
 def readData():
     print("каким образом вводим данные?")
     print("(file/console/function)")
     while True:
         print("ответ принимается в формате (fi/c/fu)")
-        inp = input()   
+        inp = input()
         inp = inp.lower()
         if inp == "c" or inp == "fi" or inp == "fu":
             break
@@ -23,6 +24,7 @@ def readData():
     else:
         return readFromFunction()
 
+
 def readFromFunction():
     func_arr = {1: func1, 2: func2}
 
@@ -32,11 +34,11 @@ def readFromFunction():
     f_numb = input()
     try:
         f_numb = int(f_numb)
-    except: 
+    except:
         print("ожидалось число")
         readData()
         return
-    if f_numb != 1 and f_numb !=2 : 
+    if f_numb != 1 and f_numb != 2:
         print("ожидалось числа 1 или 2")
         readData()
         return
@@ -53,13 +55,16 @@ def readFromFunction():
     for i in range(0, n):
         x.append(a + i * h)
         y.append(func(x[i]))
-    return np.array(x),np.array(y),x_
+    return np.array(x), np.array(y), x_
+
 
 def func1(x):
     return math.exp(x)
 
+
 def func2(x):
-    return x + 2 * x ** 2
+    return x + 2 * x**2
+
 
 def readFromConsole():
     print("Введите значения x через пробел:")
@@ -70,46 +75,47 @@ def readFromConsole():
     x_ = input().strip()
     return x, y, x_
 
+
 def dispatchToConsole():
     print("Возникла ошибка, желаете ввести данные с консоли?")
     while True:
         print("(y/n)")
-        inp = input()   
+        inp = input()
         inp = inp.lower()
         if inp == "y" or inp == "n":
             break
         print("неверный ввод")
     if inp == "y":
-        return readFromConsole() 
+        return readFromConsole()
     print("программа завершается")
     time.sleep(2)
     exit()
 
+
 def readFromFile():
     try:
         with open("input.txt", "r") as file:
-            lines = file.readlines()  
-            
+            lines = file.readlines()
+
             if len(lines) < 3:
                 print("Ошибка: файл должен содержать 3 строки")
                 return dispatchToConsole()
-            
+
             x = np.array(list(map(float, lines[0].split())))
             y = np.array(list(map(float, lines[1].split())))
-            
+
             x__str = lines[2].strip()
-            
+
             if not x__str:
                 print("Ошибка: третья строка пустая")
                 return dispatchToConsole()
-                
-            
+
             try:
                 x_ = float(x__str)
             except ValueError:
                 print("Ошибка: в третьей строке должно быть одно число")
                 return dispatchToConsole()
-    
+
     except FileNotFoundError:
         print("Файл input.txt не найден")
         return dispatchToConsole()
@@ -119,43 +125,47 @@ def readFromFile():
     except Exception as e:
         print(f"Ошибка при чтении файла: {str(e)}")
         return dispatchToConsole()
-    
+
     if len(x) != len(y) or len(x) == 0:
         print("Ошибка: массивы x и y разной длины или пустые")
         return dispatchToConsole()
     return x, y, x_
 
+
 def isDividedDifferences(X) -> bool:
     if len(X) < 2:
         print("Для проверки нужно как минимум 2 узла")
         return False
-    
+
     base_step = X[1] - X[0]
-    
+
     for i in range(1, len(X) - 1):
         current_step = X[i + 1] - X[i]
         if not (abs(current_step - base_step) < 1e-6 * max(1.0, abs(base_step))):
             print(f"узлы не равноотстоящие")
             return False
-    
+
     print(f"Узлы равноотстоящие с шагом {base_step:.2f}")
     return True
 
+
 def main():
-    x,y,x_ = readData()
+    x, y, x_ = readData()
     newtonOut = 0
     if isDividedDifferences(x):
-        newtonOut = newtonWithFiniteDifferences(x,y,x_)
+        newtonOut = newtonWithFiniteDifferences(x, y, x_)
     else:
-        newtonOut = newtonWithDividedDifferences(x,y,x_)
+        newtonOut = newtonWithDividedDifferences(x, y, x_)
 
-    lagrangeOut = lagrange(x,y,x_)
+    lagrangeOut = lagrange(x, y, x_)
 
-    print("--------------------------------------------------------------------------\n")
+    print(
+        "--------------------------------------------------------------------------\n"
+    )
     print("Результаты:")
     print(f"Лагранж: {lagrangeOut}")
     print(f"Ньютон: {newtonOut}")
 
+
 if __name__ == "__main__":
     main()
-
