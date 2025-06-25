@@ -28,12 +28,12 @@ def euler_method(f, x0, y0, xn, n, epsilon):
             if R >= epsilon:
                 print(f"Точность не достигнута при n={n}: R = {R:.2e} >= ε ({epsilon})")
                 print(f"Удваиваем число шагов: n = {n} -> {2*n}")
-                n *= 2
-                iteration_count += 1
+            else:
+                break
         else:
             print(f"Удваиваем число шагов: n = {n} -> {2*n}")
-            n *= 2
-            iteration_count += 1
+        n *= 2
+        iteration_count += 1
 
     print("\n" + "=" * 80)
     print("ФИНАЛЬНЫЕ РЕЗУЛЬТАТЫ")
