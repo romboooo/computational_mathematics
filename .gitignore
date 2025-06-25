@@ -1,5 +1,14 @@
 */__pycache__
+*/*/__pycache__
+*/*/*/__pycache__
+.vscode
 .gitmodules
 package-lock.json
 .DS_Store
 comp_math_lab_3
+*/.vscode
+lagrange.cpython-312.pyc
+*/lagrange.cpython-312.pyc
+*/*/lagrange.cpython-312.pyc
+lab5/p.sh
+reports

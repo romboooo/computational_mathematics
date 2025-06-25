@@ -1,10 +1,7 @@
 def euler_method(f, x0, y0, xn, n, epsilon):
     print("Метод Эйлера\n")
-    x0_init = x0
-    y0_init = y0
     max_iterations = 10  
     p = 1 
-    original_n = n
     iteration_count = 0
     R = float('inf') 
     

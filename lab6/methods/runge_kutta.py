@@ -8,7 +8,7 @@ def runge_kutt(f, x0, y0, xn, n, epsilon):
     original_n = n
     iteration_count = 0
     R = float('inf')  
-    
+
     while R >= epsilon and iteration_count < max_iterations:
         h = (xn - x0) / n 
         x_arr = [x0]  
