@@ -4,7 +4,6 @@ from helpers.interpretationR import interpretR
 
 NAME = 2
 
-
 def exponentialApprox(x, y):
     print("")
     print("--- Экспоненциальная ---")
