@@ -47,9 +47,8 @@ def runge_kutt(f, x0, y0, xn, n, epsilon):
 
         n *= 2
         iteration_count += 1
-
-    print("\n" + "=" * 80)
-    print("ФИНАЛЬНЫЕ РЕЗУЛЬТАТЫ")
+        
+    print("Результаты: метода Рунге-Кутты")
     print(f"Начальное число шагов: n0 = {original_n}")
     print(f"Финальное число шагов: n = {n}")
     print(f"Количество удвоений шага: {iteration_count}")

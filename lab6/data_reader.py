@@ -15,7 +15,7 @@ def choose_odu():
             if choice == 1:
                 f = lambda x, y: x + y
                 exact_y = lambda x, x0, y0: math.exp(x - x0) * (y0 + x0 + 1) - x - 1
-                return f, exact_y
+                return f, exact_y,choice
             elif choice == 2:
                 f = lambda x, y: math.sin(x) - y
                 exact_y = (
@@ -24,21 +24,24 @@ def choose_odu():
                     + 0.5 * math.sin(x)
                     - 0.5 * math.cos(x)
                 )
-                return f, exact_y
+                return f, exact_y,choice
             elif choice == 3:
                 f = lambda x, y: y / x
                 exact_y = lambda x, x0, y0: y0 * math.exp(math.log(x) - math.log(x0))
-                return f, exact_y
+                return f, exact_y,choice
             else:
                 print("Некорректный ввод! Попробуйте снова")
         except ValueError:
             print("Некорректный ввод! Введите число")
 
 
-def read_data():
+def read_data(choice):
     while True:
         try:
             x0 = float(input("Введите первый элемент интервала x0: "))
+            if choice == 3 and x0 == 0:
+                print("Ошибка: деление на ноль, попробуем еще раз!")
+                continue
             xn = float(input("Введите последний элемент интервала xn: "))
             n = int(input("Введите количество элементов в интервале n: "))
             y0 = float(input("Введите y0: "))

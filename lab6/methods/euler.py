@@ -35,8 +35,7 @@ def euler_method(f, x0, y0, xn, n, epsilon):
         n *= 2
         iteration_count += 1
 
-    print("\n" + "=" * 80)
-    print("ФИНАЛЬНЫЕ РЕЗУЛЬТАТЫ")
+    print("РЕЗУЛЬТАТЫ МЕТОДА ЭЙЛЕРА")
     print(f"Финальное число шагов: n = {n}")
     print(f"Количество удвоений шага: {iteration_count}")
 
