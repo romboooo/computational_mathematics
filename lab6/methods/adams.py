@@ -34,35 +34,59 @@ def adams_method(f, x0, y0, xn, n, epsilon, exact_y):
         f_arr.append(f(x_arr[i], y_arr[i]))
 
     for i in range(3, n):
-        y_pred = y_arr[i] + h / 24 * (
-            55 * f_arr[i] - 59 * f_arr[i - 1] + 37 * f_arr[i - 2] - 9 * f_arr[i - 3]
-        )
         x_next = x_arr[i] + h
 
-        f_pred = f(x_next, y_pred)
-        y_corr = y_arr[i] + h / 24 * (
-            9 * f_pred + 19 * f_arr[i] - 5 * f_arr[i - 1] + f_arr[i - 2]
+        y_pred = y_arr[i] + h/24 * (
+            55 * f_arr[i]
+            - 59 * f_arr[i-1]
+            + 37 * f_arr[i-2]
+            -  9 * f_arr[i-3]
         )
 
+        y_old = y_pred
+        f_pred = f(x_next, y_old)
+
+        while True:
+            y_new = y_arr[i] + h/24 * (
+                9 * f_pred
+            + 19 * f_arr[i]
+            -  5 * f_arr[i-1]
+            +      f_arr[i-2]
+            )
+
+            print("проверка условия:")
+
+            print("|предиктор - корректор| < epsilon")
+            print(f"|{y_new} - {y_old}|< {epsilon}:")
+            if abs(y_new - y_old) < epsilon:
+                print("True -> xi+1 = xi + h")
+                break
+            print("False -> предиктор становится корректором\n")
+            y_old = y_new
+            f_pred = f(x_next, y_old)
         x_arr.append(x_next)
-        y_arr.append(y_corr)
-        f_arr.append(f(x_next, y_corr))
+        y_arr.append(y_new)
+        f_arr.append(f(x_next, y_new))
 
     print("\nРезультат метода Адамса (предиктор-корректор):")
     print("x\t\tПриближенное y\t\tТочное y\t\tПогрешность")
+
+    minerr = []
     for i in range(len(x_arr)):
         exact = exact_y(x_arr[i], x0_init, y0_init)
         error = abs(y_arr[i] - exact)
+        minerr.append(error)
         print(f"{x_arr[i]:.6f}\t{y_arr[i]:.12f}\t{exact:.12f}\t{error:.2e}")
 
-    final_error = abs(y_arr[-1] - exact_y(xn, x0_init, y0_init))
-    if final_error < epsilon:
-        print(
-            f"\nТочность достигнута: |y_прибл - y_точн| = {final_error:.2e} < ε = {epsilon}"
-        )
+    maxn = max(minerr)
+
+    print(f"Max error = {maxn}")
+
+    if maxn < epsilon:
+        print(f"\nТочность достигнута: |y_прибл - y_точн| = {maxn:.2e} < ε = {epsilon}")
     else:
         print(
-            f"\nТочность НЕ достигнута: |y_прибл - y_точн| = {final_error:.2e} >= ε = {epsilon}"
+            f"\nТочность НЕ достигнута: |y_прибл - y_точн| = {maxn:.2e} >= ε = {epsilon}"
         )
 
     return x_arr, y_arr
@@ -70,17 +94,23 @@ def adams_method(f, x0, y0, xn, n, epsilon, exact_y):
 
 def print_results(x_arr, y_arr, exact_y, x0, y0, epsilon):
     print("x\t\tПриближенное y\t\tТочное y\t\tПогрешность")
+
+    minerr = []
     for i in range(len(x_arr)):
         exact = exact_y(x_arr[i], x0, y0)
         error = abs(y_arr[i] - exact)
+        minerr.append(error)
         print(f"{x_arr[i]:.6f}\t{y_arr[i]:.12f}\t{exact:.12f}\t{error:.2e}")
 
     final_error = abs(y_arr[-1] - exact_y(x_arr[-1], x0, y0))
-    if final_error < epsilon:
+    if max(minerr) < epsilon:
         print(
-            f"\nТочность достигнута: |y_прибл - y_точн| = {final_error:.2e} < ε = {epsilon}"
+            f"\nТочность достигнута: |y_прибл - y_точн| = {max(minerr):.2e} < ε = {epsilon}"
         )
+        print(max(minerr))
+
     else:
         print(
-            f"\nТочность НЕ достигнута: |y_прибл - y_точн| = {final_error:.2e} >= ε = {epsilon}"
+            f"\nТочность НЕ достигнута: |y_прибл - y_точн| = {max(minerr):.2e} >= ε = {epsilon}"
         )
+        print(max(minerr))

@@ -7,8 +7,8 @@ from methods.adams import adams_method
 def main():
     f, exact_y, num = choose_odu()
     x0, xn, n, y0, epsilon = read_data(num)
-    runge_kutt(f, x0, y0, xn, n, epsilon)
-    euler_method(f, x0, y0, xn, n, epsilon)
+    # runge_kutt(f, x0, y0, xn, n, epsilon)
+    # euler_method(f, x0, y0, xn, n, epsilon)
     adams_method(f, x0, y0, xn, n, epsilon, exact_y)
 
 

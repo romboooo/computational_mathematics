@@ -16,6 +16,9 @@ def runge_kutt(f, x0, y0, xn, n, epsilon):
         x_arr = [x0]
         y_arr = [y0]
 
+
+
+
         for _ in range(n):
             xi = x_arr[-1]
             yi = y_arr[-1]
@@ -33,6 +36,8 @@ def runge_kutt(f, x0, y0, xn, n, epsilon):
 
         y_n_history.append(y_arr[-1])
 
+        print(f"yn =  {y_arr[-1]}")
+
         if len(y_n_history) >= 2:
             yh_n, yh2_n = y_arr[len(y_arr) - 2 :]
             R = abs(yh_n - yh2_n) / (2**p - 1)
@@ -47,7 +52,7 @@ def runge_kutt(f, x0, y0, xn, n, epsilon):
 
         n *= 2
         iteration_count += 1
-        
+
     print("Результаты: метода Рунге-Кутты")
     print(f"Начальное число шагов: n0 = {original_n}")
     print(f"Финальное число шагов: n = {n}")

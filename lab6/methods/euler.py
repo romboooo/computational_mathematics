@@ -21,6 +21,10 @@ def euler_method(f, x0, y0, xn, n, epsilon):
             x_arr.append(next_x)
         y_n_history.append(y_arr[-1])
 
+
+        print(f"yn =  {y_arr[-1]} при n = {n}")
+        
+                
         if len(y_n_history) >= 2:
             yh_n, yh2_n = y_arr[len(y_arr) - 2 :]
             R = abs(yh_n - yh2_n) / (2**p - 1)
